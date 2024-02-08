@@ -30,7 +30,11 @@ class Chessboard
     label_columns
   end
 
-  def label_columns
+  def display_column_labels
     puts "  " + LETTERS.map{|n| n.to_s}.join(" ")
+  end
+
+  def within_bounds?(square)
+    squares.keys.include?(square)
   end
 end
