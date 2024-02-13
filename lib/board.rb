@@ -12,12 +12,24 @@ class Chessboard
     @squares = {}
   end
 
-  def build_board
+  def build_empty_board
     (LOWER_BOUND + 1..UPPER_BOUND + 1).each do |row|
       LETTERS.each do |column|
         squares[(column.to_s + row.to_s).to_sym] = EMPTY_SQUARE
       end
     end
+  end
+
+  def set_board_pieces
+    set_pawns
+  end
+
+  def set_pawns
+    white_pawn_squares = squares.select {|square| square.match?(/2/)}
+    white_pawn_squares.each {|square, _| squares[square] = Pawn.new(square, :white)}
+
+    black_pawn_squares = squares.select {|square| square.match?(/7/)}
+    black_pawn_squares.each {|square, _| squares[square] = Pawn.new(square, :black)}
   end
 
   def display_board
@@ -53,15 +65,3 @@ class Chessboard
   end
 
 end
-
-
-x = Chessboard.new
-x.build_board
-pawn = Pawn.new(:E5, :white)
-
-x.squares[:E5] = pawn
-x.squares[:D6] = 'x'
-p x[:E5].validated_moveset(x.squares)
-
-
-puts x
