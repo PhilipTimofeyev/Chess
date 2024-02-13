@@ -45,6 +45,7 @@ class Chessboard
 
   def []=(square, piece)
     @squares[square] = piece
+    piece.update_position(square)
   end
 
   def [](square)
@@ -54,3 +55,13 @@ class Chessboard
 end
 
 
+x = Chessboard.new
+x.build_board
+pawn = Pawn.new(:E5, :white)
+
+x.squares[:E5] = pawn
+x.squares[:D6] = 'x'
+p x[:E5].validated_moveset(x.squares)
+
+
+puts x
