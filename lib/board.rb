@@ -1,3 +1,4 @@
+require_relative 'pieces'
 
 class Chessboard
   EMPTY_SQUARE = '_'
@@ -22,12 +23,16 @@ class Chessboard
   def display_board
     row_count = UPPER_BOUND
 
+    display_column_labels
     squares.values.reverse.each_slice(UPPER_BOUND + 1) do |row| 
-      puts "#{row_count + 1}|#{row.reverse.map{|square| square}.join("|")}|" 
+      puts "#{row_count + 1}|#{row.reverse.map{|square| square}.join("|")}|#{row_count + 1}" 
       row_count -= 1
     end
+    display_column_labels
+  end
 
-    label_columns
+  def to_s
+    display_board
   end
 
   def display_column_labels
@@ -37,4 +42,15 @@ class Chessboard
   def within_bounds?(square)
     squares.keys.include?(square)
   end
+
+  def []=(square, piece)
+    @squares[square] = piece
+  end
+
+  def [](square)
+    @squares[square]
+  end
+
 end
+
+
