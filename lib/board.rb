@@ -15,7 +15,7 @@ class Chessboard
   def build_empty_board
     (LOWER_BOUND + 1..UPPER_BOUND + 1).each do |row|
       LETTERS.each do |column|
-        squares[(column.to_s + row.to_s).to_sym] = EMPTY_SQUARE
+        squares[(column.to_s + row.to_s).to_sym] = Empty.new
       end
     end
   end

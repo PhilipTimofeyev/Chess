@@ -26,6 +26,21 @@ module Misc
 
 end
 
+class Empty
+	attr :name, :color
+
+	def initialize
+		@name = 'Empty'
+		@color = :empty
+		@display = "_"
+	end
+
+	def to_s
+		@display
+	end
+
+end
+
 class Pawn
 	include Misc
 
@@ -74,7 +89,7 @@ class Pawn
 		center_forward_one = all_moves[1]
 		diagonal_right = all_moves.last
 
-		validate_moves = all_moves.select {|square| within_bounds?(square) && (board[square] == '_') || board[square].color != color}
+		validate_moves = all_moves.select {|square| within_bounds?(square) && board[square].color != color}
 
 		validate_moves.delete(diagonal_left) if board[diagonal_left].nil? || board[diagonal_left] == '_' #can capture only diagonally
 		validate_moves.delete(center_forward_one) unless board[center_forward_one].nil? || board[center_forward_one] == '_' #can only move forward if not capturing
