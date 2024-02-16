@@ -10,16 +10,11 @@ class Player
 	def turn(board)
 		piece = select_piece(board)
 
-		puts "Where would you like to move #{board.squares[piece].name} #{board.squares[piece].current_square}?"
-		p board[piece].validated_moveset(board)
-
-		move_to = gets.chomp.to_sym
-
-		board.move_piece(piece, move_to)
+		select_square(board, piece)
 	end
 
 	def select_color
-		puts "Will you be playing as the white pieces, or black pieces?"
+		puts "Will you be playing as the white or black?"
 
 		response = nil
 
@@ -37,16 +32,32 @@ class Player
 	end
 
 	def select_piece(board)
-		puts "Select a chess piece to move"
+		puts "Enter a chess piece to move"
 		square = nil
 
 		loop do
-			square = gets.chomp.to_sym
+			square = gets.chomp.upcase.to_sym
 
 			break if board.squares.keys.include?(square) && board[square].color == color
-			puts "Please select one of your pieces."
+			puts "Please enter one of your pieces:"
 		end
 		square
+	end
+
+	def select_square(board, piece)
+		puts "Where would you like to move #{board.squares[piece].name} #{board.squares[piece].current_square}?"
+
+		valid_squares = board[piece].validated_moveset(board)
+		p valid_squares
+
+		square = nil
+		loop do
+			square = gets.chomp.upcase.to_sym
+			break if valid_squares.include?(square)
+			puts "Please enter a valid square."
+		end
+
+		board.move_piece(piece, square)
 	end
 
 end	
