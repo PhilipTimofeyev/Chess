@@ -26,10 +26,10 @@ class Chessboard
 
   def set_pawns
     white_pawn_squares = squares.select {|square| square.match?(/2/)}
-    white_pawn_squares.each {|square, _| squares[square] = Pawn.new(square, :white)}
+    white_pawn_squares.each_key {|square| squares[square] = Pawn.new(square, :white)}
 
     black_pawn_squares = squares.select {|square| square.match?(/7/)}
-    black_pawn_squares.each {|square, _| squares[square] = Pawn.new(square, :black)}
+    black_pawn_squares.each_key {|square| squares[square] = Pawn.new(square, :black)}
   end
 
   def display_board
@@ -64,4 +64,17 @@ class Chessboard
     @squares[square]
   end
 
+  def move_piece(current_sq, new_sq)
+    piece = squares[current_sq]
+    squares[current_sq] = EMPTY_SQUARE
+    squares[new_sq] = piece
+    squares[new_sq].update_position(new_sq)
+  end
+
 end
+
+# x = Chessboard.new
+# x.build_empty_board
+# x.set_board_pieces
+# p x[:D2].validated_moveset(x.squares)
+# x.to_s
