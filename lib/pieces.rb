@@ -91,9 +91,9 @@ class Pawn
 
 		validate_moves = all_moves.select {|square| within_bounds?(square) && board[square].color != color}
 
-		validate_moves.delete(diagonal_left) if board[diagonal_left].nil? || board[diagonal_left] == '_' #can capture only diagonally
-		validate_moves.delete(center_forward_one) unless board[center_forward_one].nil? || board[center_forward_one] == '_' #can only move forward if not capturing
-		validate_moves.delete(diagonal_right) if board[diagonal_right].nil? || board[diagonal_right] == '_'  #can capture only diagonally
+		validate_moves.delete(diagonal_left) if board[diagonal_left].color == :empty #can capture only diagonally
+		validate_moves.delete(center_forward_one) unless board[center_forward_one].color == :empty #can only move forward if not capturing
+		validate_moves.delete(diagonal_right) if board[diagonal_right].color == :empty #can capture only diagonally
 
 		validate_moves
 	end
