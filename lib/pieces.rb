@@ -36,6 +36,62 @@ module Misc
 		current_column == new_square_column
 	end
 
+	def all_squares_in_column(board)
+		square = convert_sym_to_string_arr(current_square)
+		column = square.first
+		board.squares.keys.select {|key| key.match?(column)}
+	end
+
+	def all_squares_in_row(board)
+		square = convert_sym_to_string_arr(current_square)
+		row = square.last
+		board.squares.keys.select {|key| key.match?(row)}
+	end
+
+	def find_valid_squares(arr, board)
+		valid_squares = []
+
+		arr.each do |square|
+			if board[square].color == :empty
+				valid_squares << square
+			elsif board[square].color == color
+				break
+			else
+				 valid_squares << square
+				 break
+			end
+		end
+		valid_squares
+	end
+
+	def valid_column_squares(board)
+		column_squares = all_squares_in_column(board)
+
+		idx = column_squares.find_index(current_square)
+
+		bottom_half = column_squares[0...idx].reverse
+		top_half = column_squares[idx + 1..-1]
+
+		bottom_valid = find_valid_squares(bottom_half, board)
+		top_valid = find_valid_squares(top_half, board)
+
+		bottom_valid + top_valid
+	end
+
+	def valid_row_squares(board)
+		row_squares = all_squares_in_row(board)
+
+		idx = row_squares.find_index(current_square)
+
+		left_half = row_squares[0...idx].reverse
+		right_half = row_squares[idx + 1..-1]
+
+		bottom_valid = find_valid_squares(left_half, board)
+		top_valid = find_valid_squares(right_half, board)
+
+		bottom_valid + top_valid
+	end
+
 end
 
 class Empty
@@ -112,6 +168,29 @@ class Pawn
 
 	def to_s
 		@display
+	end
+
+end
+
+class Rook
+	include Misc
+
+	attr_accessor :current_square
+	attr :color, :name
+
+	def initialize(current_square, color)
+		@name = 'Rook'
+		@color = color
+		@display = color == :black ? '♜' : '♖'
+		@current_square = current_square
+	end
+
+	def to_s
+		@display
+	end
+
+	def validated_moveset(board)
+		valid_column_squares(board) + valid_row_squares(board)
 	end
 
 end
