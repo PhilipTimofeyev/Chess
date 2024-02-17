@@ -1,7 +1,8 @@
 
 
 class Player
-	attr_reader :name, :color
+	attr_accessor :color
+	attr_reader :name
 
 	def initalize
 		@name = "Arthur"
@@ -19,7 +20,7 @@ class Player
 		response = nil
 
 		loop do
-			response = gets.chomp
+			response = gets.chomp.downcase
 			break if ["black", "white"].include?(response)
 			puts "Not a valid color. Please enter 'white' or 'black'."
 		end
