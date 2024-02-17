@@ -22,6 +22,7 @@ class Chessboard
 
   def set_board_pieces
     set_pawns
+    set_rooks
   end
 
   def set_pawns
@@ -30,6 +31,14 @@ class Chessboard
 
     black_pawn_squares = squares.select {|square| square.match?(/7/)}
     black_pawn_squares.each_key {|square| squares[square] = Pawn.new(square, :black)}
+  end
+
+  def set_rooks
+    squares[:A1] = Rook.new(:A1, :white)
+    squares[:H1] = Rook.new(:H1, :white)
+
+    squares[:A8] = Rook.new(:A8, :black)
+    squares[:H8] = Rook.new(:H8, :black)
   end
 
   def display_board
@@ -44,6 +53,7 @@ class Chessboard
   end
 
   def to_s
+    clear
     display_board
   end
 
@@ -66,15 +76,13 @@ class Chessboard
 
   def move_piece(current_sq, new_sq)
     piece = squares[current_sq]
-    squares[current_sq] = EMPTY_SQUARE
+    squares[current_sq] = Empty.new
     squares[new_sq] = piece
     squares[new_sq].update_position(new_sq)
   end
 
-end
+  def clear
+    Gem.win_platform? ? (system "cls") : (system "clear")
+  end
 
-# x = Chessboard.new
-# x.build_empty_board
-# x.set_board_pieces
-# p x[:D2].validated_moveset(x.squares)
-# x.to_s
+end
