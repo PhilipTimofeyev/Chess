@@ -26,11 +26,11 @@ class Chessboard
   end
 
   def set_pawns
-    white_pawn_squares = squares.select {|square| square.match?(/2/)}
-    white_pawn_squares.each_key {|square| squares[square] = Pawn.new(square, :white)}
+    white_pawn_squares = squares.select { |square| square.match?(/2/) }
+    white_pawn_squares.each_key { |square| squares[square] = Pawn.new(square, :white) }
 
-    black_pawn_squares = squares.select {|square| square.match?(/7/)}
-    black_pawn_squares.each_key {|square| squares[square] = Pawn.new(square, :black)}
+    black_pawn_squares = squares.select { |square| square.match?(/7/) }
+    black_pawn_squares.each_key { |square| squares[square] = Pawn.new(square, :black) }
   end
 
   def set_rooks
@@ -45,8 +45,9 @@ class Chessboard
     row_count = UPPER_BOUND
 
     display_column_labels
-    squares.values.reverse.each_slice(UPPER_BOUND + 1) do |row| 
-      puts "#{row_count + 1}|#{row.reverse.map{|square| square}.join("|")}|#{row_count + 1}" 
+    squares.values.reverse.each_slice(UPPER_BOUND + 1) do |row|
+      puts "#{row_count + 1}|#{row.reverse.map { |square| square }
+      .join('|')}|#{row_count + 1}"
       row_count -= 1
     end
     display_column_labels
@@ -58,7 +59,7 @@ class Chessboard
   end
 
   def display_column_labels
-    puts "  " + LETTERS.map{|n| n.to_s}.join(" ")
+    puts "  #{LETTERS.map(&:to_s).join(' ')}"
   end
 
   def within_bounds?(square)
@@ -82,7 +83,6 @@ class Chessboard
   end
 
   def clear
-    Gem.win_platform? ? (system "cls") : (system "clear")
+    Gem.win_platform? ? (system 'cls') : (system 'clear')
   end
-
 end
