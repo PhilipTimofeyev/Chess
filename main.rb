@@ -4,13 +4,17 @@ require_relative './lib/player'
 board = Chessboard.new
 board.build_empty_board
 board.set_board_pieces
-player = Player.new
-player.select_color
+player_one = Player.new
+player_one.select_color
+player_two = Player.new
+player_two.color = player_one.color == :white ? :black : :white
 
 board.to_s
 
 loop do
-  player.turn(board)
-
+  
+  player_one.turn(board)
+  board.to_s
+  player_two.turn(board)
   board.to_s
 end
