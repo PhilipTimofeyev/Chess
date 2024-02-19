@@ -1,6 +1,6 @@
 module Misc
 	def convert_sym_to_string_arr(sym)
-		sym.to_s.chars
+		[sym.to_s[0], sym.to_s[1..-1]]
 	end
 
 	def convert_arr_to_sym(arr)
@@ -22,7 +22,7 @@ module Misc
 			letter, number = convert_sym_to_string_arr(square)
 		end
 
-		number.between?('1', '8') && letter.between?("A", "H")
+		number.to_i.between?(1, 8) && letter.between?("A", "H")
 	end
 
 	def update_position(new_square)
@@ -297,6 +297,8 @@ class Queen
 
 end
 
+#King cannot place itself in check
+
 class King
 	include Misc
 
@@ -328,9 +330,57 @@ class King
 	def validated_moveset(board)
 		squares = full_moveset(board)
 
+		#don't need within bounds here
+
 		squares.select do |square|
 			within_bounds?(square) && board[square].color != color
 		end
 	end
 
 end
+
+class Knight
+	include Misc
+
+	attr_accessor :current_square
+	attr :color, :name
+
+	def initialize(current_square, color)
+		@name = 'Knight'
+		@color = color
+		@display = color == :black ? '♞' : '♘'
+		@current_square = current_square
+	end
+
+	def to_s
+		@display
+	end
+
+	def full_moveset(board)
+		letter, number = convert_sym_to_string_arr(current_square)
+
+		moveset = [[letter.succ, number.succ.succ],
+							[letter.succ, preceding_number(preceding_number(number))],
+							[letter.succ.succ, number.succ],
+							[letter.succ.succ, preceding_number(number)],
+							[preceding_letter(letter), number.succ.succ],
+							[preceding_letter(letter), preceding_number(preceding_number(number))],
+							[preceding_letter(preceding_letter(letter)), number.succ],
+							[preceding_letter(preceding_letter(letter)), preceding_number(number)]
+							]
+
+	end
+
+	def validated_moveset(board)
+		squares = full_moveset(board)
+		squares.map! {|square| convert_arr_to_sym(square)}
+
+		within_bounds_squares = squares.select {|square| within_bounds?(square) }
+
+		validated_squares = within_bounds_squares.select {|square| board[square].color != color}
+		validated_squares.sort
+	end
+
+end
+
+
