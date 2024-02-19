@@ -265,3 +265,36 @@ class Bishop
 	end
 
 end
+
+class Queen
+	include Misc
+
+	attr_accessor :current_square
+	attr :color, :name
+
+	def initialize(current_square, color)
+		@name = 'Queen'
+		@color = color
+		@display = color == :black ? '♛' : '♕'
+		@current_square = current_square
+	end
+
+	def to_s
+		@display
+	end
+
+	def validated_moveset(board)
+		left_right_diag =  diagonal_squares_left_right(board)
+		right_left_diag = diagonal_squares_right_left(board)
+		column_squares = all_squares_in_column(board)
+		row_squares = all_squares_in_row(board)
+
+		row = valid_squares(row_squares, board)
+		column = valid_squares(column_squares, board)
+		diag_left_right = valid_squares(left_right_diag, board)
+		diag_right_left = valid_squares(right_left_diag, board)
+
+		row + column + diag_left_right + diag_right_left
+	end
+
+end
