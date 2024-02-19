@@ -134,8 +134,6 @@ module Misc
 
 end
 
-
-
 class Empty
 	attr :name, :color
 
@@ -295,6 +293,44 @@ class Queen
 		diag_right_left = valid_squares(right_left_diag, board)
 
 		row + column + diag_left_right + diag_right_left
+	end
+
+end
+
+class King
+	include Misc
+
+	attr_accessor :current_square
+	attr :color, :name
+
+	def initialize(current_square, color)
+		@name = 'King'
+		@color = color
+		@display = color == :black ? '♚' : '♔'
+		@current_square = current_square
+	end
+
+	def to_s
+		@display
+	end
+
+	def full_moveset(board)
+		c_letter, c_number = convert_sym_to_string_arr(current_square)
+
+		board.squares.keys.select do |square|
+			letter, number = convert_sym_to_string_arr(square)
+			
+			letter.between?(preceding_letter(c_letter), c_letter.succ) &&
+			number.between?(preceding_number(c_number), c_number.succ)
+		end
+	end
+
+	def validated_moveset(board)
+		squares = full_moveset(board)
+
+		squares.select do |square|
+			within_bounds?(square) && board[square].color != color
+		end
 	end
 
 end
