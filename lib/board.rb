@@ -1,6 +1,7 @@
 require_relative 'pieces'
 
 class Chessboard
+  #change lower upper bound to arr (rows/numbers)
   EMPTY_SQUARE = '_'
   LOWER_BOUND = 0
   UPPER_BOUND = 7
@@ -24,6 +25,7 @@ class Chessboard
     set_pawns
     set_rooks
     set_bishops
+    set_knights
     set_queens
     set_kings
   end
@@ -45,20 +47,29 @@ class Chessboard
   end
 
   def set_bishops
-    squares[:C1] = Bishop.new(:C1, :white)
-    squares[:F1] = Bishop.new(:F1, :white)
-    squares[:C8] = Bishop.new(:C8, :black)
-    squares[:F8] = Bishop.new(:F8, :black)
+    squares[:B1] = Bishop.new(:B1, :white)
+    squares[:G1] = Bishop.new(:G1, :white)
+
+    squares[:B8] = Bishop.new(:B8, :black)
+    squares[:G8] = Bishop.new(:G8, :black)
+  end
+
+  def set_knights
+    squares[:C1] = Knight.new(:C1, :white)
+    squares[:F1] = Knight.new(:F1, :white)
+
+    squares[:C8] = Knight.new(:C8, :black)
+    squares[:F8] = Knight.new(:F8, :black)
   end
 
   def set_queens
-    squares[:E1] = Queen.new(:E1, :white)
-    squares[:E8] = Queen.new(:E8, :black)
+    squares[:D1] = Queen.new(:D1, :white)
+    squares[:D8] = Queen.new(:D8, :black)
   end
 
   def set_kings
-    squares[:D1] = King.new(:D1, :white)
-    squares[:D8] = King.new(:D8, :black)
+    squares[:E1] = King.new(:E1, :white)
+    squares[:E8] = King.new(:E8, :black)
   end
 
   def display_board
@@ -106,4 +117,19 @@ class Chessboard
     Gem.win_platform? ? (system 'cls') : (system 'clear')
   end
 end
+
+x = Chessboard.new
+x.build_empty_board
+x.set_board_pieces
+
+# x.move_piece(:B2, :D5)
+# x.move_piece(:D1, :D5)
+# # bish = Bishop.new(:C4, :white)
+# # x[:C4] = bish
+
+p x[:C8].validated_moveset(x)
+
+# x[:C4].validated_moveset(x)
+
+x.to_s
 
