@@ -25,6 +25,7 @@ class Chessboard
     set_rooks
     set_bishops
     set_queens
+    set_kings
   end
 
   def set_pawns
@@ -52,7 +53,12 @@ class Chessboard
 
   def set_queens
     squares[:E1] = Queen.new(:E1, :white)
-    squares[:E8] = Rook.new(:E8, :black)
+    squares[:E8] = Queen.new(:E8, :black)
+  end
+
+  def set_kings
+    squares[:D1] = King.new(:D1, :white)
+    squares[:D8] = King.new(:D8, :black)
   end
 
   def display_board
@@ -100,5 +106,4 @@ class Chessboard
     Gem.win_platform? ? (system 'cls') : (system 'clear')
   end
 end
-
 
