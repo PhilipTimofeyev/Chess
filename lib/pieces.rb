@@ -64,13 +64,11 @@ module Misc
 		valid_squares
 	end
 
-	def valid_column_squares(board)
-		column_squares = all_squares_in_column(board)
+	def valid_squares(square_list, board)
+		idx = square_list.find_index(current_square)
 
-		idx = column_squares.find_index(current_square)
-
-		bottom_half = column_squares[0...idx].reverse
-		top_half = column_squares[idx + 1..-1]
+		bottom_half = square_list[0...idx].reverse
+		top_half = square_list[idx + 1..-1]
 
 		bottom_valid = find_valid_squares(bottom_half, board)
 		top_valid = find_valid_squares(top_half, board)
@@ -78,21 +76,65 @@ module Misc
 		bottom_valid + top_valid
 	end
 
-	def valid_row_squares(board)
-		row_squares = all_squares_in_row(board)
+	def find_diagonal_root_left_right(board)
+		letter, number = convert_sym_to_string_arr(current_square)
 
-		idx = row_squares.find_index(current_square)
+		until number == '1' || letter == 'A' do
+			number = preceding_number(number)
+			letter = preceding_letter(letter)
+		end
 
-		left_half = row_squares[0...idx].reverse
-		right_half = row_squares[idx + 1..-1]
+		[letter, number]
+	end
 
-		bottom_valid = find_valid_squares(left_half, board)
-		top_valid = find_valid_squares(right_half, board)
+	def diagonal_squares_left_right(board)
+		root = find_diagonal_root_left_right(board)
 
-		bottom_valid + top_valid
+		letter, number = root
+
+		squares = []
+
+		until number > '8' || letter > 'H' do
+			squares << convert_arr_to_sym([letter, number])
+			number = number.succ
+			letter = letter.succ
+		end
+
+		squares
+	end
+
+	#find better name for method
+
+	def find_diagonal_root_right_left(board)
+		letter, number = convert_sym_to_string_arr(current_square)
+
+		until number == '8' || letter == 'A' do
+			number = number.succ
+			letter = preceding_letter(letter)
+		end
+
+		[letter, number]
+	end
+
+	def diagonal_squares_right_left(board)
+		root = find_diagonal_root_right_left(board)
+
+		letter, number = root
+
+		squares = []
+
+		until number < '1' || letter > 'H' do
+			squares << convert_arr_to_sym([letter, number])
+			number = preceding_number(number)
+			letter = letter.succ
+		end
+
+		squares
 	end
 
 end
+
+
 
 class Empty
 	attr :name, :color
@@ -190,7 +232,36 @@ class Rook
 	end
 
 	def validated_moveset(board)
-		valid_column_squares(board) + valid_row_squares(board)
+		column_squares = all_squares_in_column(board)
+		row_squares = all_squares_in_row(board)
+		valid_squares(column_squares, board) + valid_squares(row_squares, board)
+	end
+
+end
+
+class Bishop
+	include Misc
+
+	attr_accessor :current_square
+	attr :color, :name
+
+	def initialize(current_square, color)
+		@name = 'Bishop'
+		@color = color
+		@display = color == :black ? '♝' : '♗'
+		@current_square = current_square
+	end
+
+	def to_s
+		@display
+	end
+
+	def validated_moveset(board)
+		left_right =  diagonal_squares_left_right(board)
+		right_left = diagonal_squares_right_left(board)
+
+		valid = valid_squares(left_right, board) + valid_squares(right_left, board)
+		valid.sort
 	end
 
 end
