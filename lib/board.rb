@@ -24,6 +24,7 @@ class Chessboard
     set_pawns
     set_rooks
     set_bishops
+    set_queens
   end
 
   def set_pawns
@@ -47,6 +48,11 @@ class Chessboard
     squares[:F1] = Bishop.new(:F1, :white)
     squares[:C8] = Bishop.new(:C8, :black)
     squares[:F8] = Bishop.new(:F8, :black)
+  end
+
+  def set_queens
+    squares[:E1] = Queen.new(:E1, :white)
+    squares[:E8] = Rook.new(:E8, :black)
   end
 
   def display_board
@@ -95,19 +101,4 @@ class Chessboard
   end
 end
 
-
-# x = Chessboard.new
-# x.build_empty_board
-# x.set_board_pieces
-
-# x.move_piece(:B2, :D5)
-# x.move_piece(:A2, :A5)
-# # bish = Bishop.new(:C4, :white)
-# # x[:C4] = bish
-
-# p x[:A1].validated_moveset(x)
-
-# # x[:C4].validated_moveset(x)
-
-# x.to_s
 
