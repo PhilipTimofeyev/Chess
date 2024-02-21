@@ -16,11 +16,7 @@ module Misc
 	end
 
 	def within_bounds?(square)
-		if square.is_a?(Array)
-			letter, number = square
-		else
-			letter, number = convert_sym_to_string_arr(square)
-		end
+		letter, number = square.is_a?(Array) ? square : convert_sym_to_string_arr(square)
 
 		number.to_i.between?(1, 8) && letter.between?("A", "H")
 	end
@@ -30,21 +26,19 @@ module Misc
 	end
 
 	def same_column?(square)
-		current_column = convert_sym_to_string_arr(current_square).first
-		new_square_column = convert_sym_to_string_arr(square).first
+		current_column, _ = convert_sym_to_string_arr(current_square)
+		new_square_column, _ = convert_sym_to_string_arr(square)
 
 		current_column == new_square_column
 	end
 
 	def all_squares_in_column(board)
-		square = convert_sym_to_string_arr(current_square)
-		column = square.first
+		column, row = convert_sym_to_string_arr(current_square)
 		board.squares.keys.select {|key| key.match?(column)}
 	end
 
 	def all_squares_in_row(board)
-		square = convert_sym_to_string_arr(current_square)
-		row = square.last
+		column, row = convert_sym_to_string_arr(current_square)
 		board.squares.keys.select {|key| key.match?(row)}
 	end
 
@@ -65,18 +59,18 @@ module Misc
 	end
 
 	def valid_squares(square_list, board)
-		idx = square_list.find_index(current_square)
+		current_square_idx = square_list.find_index(current_square)
 
-		bottom_half = square_list[0...idx].reverse
-		top_half = square_list[idx + 1..-1]
+		first_half = square_list[0...current_square_idx].reverse
+		second_half = square_list[current_square_idx + 1..-1]
 
-		bottom_valid = find_valid_squares(bottom_half, board)
-		top_valid = find_valid_squares(top_half, board)
+		first_half_valid = find_valid_squares(first_half, board)
+		second_half_valid = find_valid_squares(second_half, board)
 
-		bottom_valid + top_valid
+		first_half_valid + second_half_valid
 	end
 
-	def find_diagonal_root_left_right(board)
+	def find_antidiagonal_root(board)
 		letter, number = convert_sym_to_string_arr(current_square)
 
 		until number == '1' || letter == 'A' do
@@ -87,10 +81,8 @@ module Misc
 		[letter, number]
 	end
 
-	def diagonal_squares_left_right(board)
-		root = find_diagonal_root_left_right(board)
-
-		letter, number = root
+	def antidiagonal_squares(board)
+		letter, number = find_antidiagonal_root(board)
 
 		squares = []
 
@@ -103,9 +95,7 @@ module Misc
 		squares
 	end
 
-	#find better name for method
-
-	def find_diagonal_root_right_left(board)
+	def find_main_diagonal_root(board)
 		letter, number = convert_sym_to_string_arr(current_square)
 
 		until number == '8' || letter == 'A' do
@@ -116,10 +106,8 @@ module Misc
 		[letter, number]
 	end
 
-	def diagonal_squares_right_left(board)
-		root = find_diagonal_root_right_left(board)
-
-		letter, number = root
+	def main_diagonal_squares(board)
+		letter, number = find_main_diagonal_root(board)
 
 		squares = []
 
@@ -256,8 +244,8 @@ class Bishop
 	end
 
 	def validated_moveset(board)
-		left_right =  diagonal_squares_left_right(board)
-		right_left = diagonal_squares_right_left(board)
+		left_right =  antidiagonal_squares(board)
+		right_left = main_diagonal_squares(board)
 
 		valid = valid_squares(left_right, board) + valid_squares(right_left, board)
 		valid.sort
@@ -283,8 +271,8 @@ class Queen
 	end
 
 	def validated_moveset(board)
-		left_right_diag =  diagonal_squares_left_right(board)
-		right_left_diag = diagonal_squares_right_left(board)
+		left_right_diag =  antidiagonal_squares(board)
+		right_left_diag = main_diagonal_squares(board)
 		column_squares = all_squares_in_column(board)
 		row_squares = all_squares_in_row(board)
 
