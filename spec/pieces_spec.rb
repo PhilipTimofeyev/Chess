@@ -177,4 +177,42 @@ describe Pawn do
       end
   end
 
+  describe Rook do
+
+    before do 
+      board.build_empty_board
+      board.set_board_pieces
+    end
+
+    let(:rook) { described_class.new }
+    let(:board) {Chessboard.new}
+
+    describe 'moveset' do
+      it 'only shows column and row for current square' do
+        board.move_piece(:A1, :C4)
+        rook = :C4
+        correct_moveset = [:A4, :B4, :C3, :C5, :C6, :C7, :D4, :E4, :F4, :G4, :H4]
+        result = board[rook].validated_moveset(board)
+
+        expect(result).to eq(correct_moveset)
+      end
+
+      it 'only captures opposite color' do
+        board.move_piece(:A1, :C4)
+        board.move_piece(:A2, :C3)
+        board.move_piece(:B2, :B4)
+        board.move_piece(:B7, :C5)
+        board.move_piece(:C7, :D4)
+
+        rook = :C4
+        correct_moveset = [:C5, :D4]
+        result = board[rook].validated_moveset(board)
+
+        expect(result).to eq(correct_moveset)
+      end
+    end
+
+  end
+
+
 end
