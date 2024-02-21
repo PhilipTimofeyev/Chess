@@ -118,18 +118,3 @@ class Chessboard
   end
 end
 
-x = Chessboard.new
-x.build_empty_board
-x.set_board_pieces
-
-# x.move_piece(:B2, :D5)
-# x.move_piece(:D1, :D5)
-# # bish = Bishop.new(:C4, :white)
-# # x[:C4] = bish
-
-p x[:C8].validated_moveset(x)
-
-# x[:C4].validated_moveset(x)
-
-x.to_s
-
