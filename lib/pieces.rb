@@ -210,7 +210,7 @@ class Rook < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Rook'
-		@color = color
+    @display = color == :black ? '♜' : '♖'
 		super
 	end
 
@@ -231,7 +231,7 @@ class Bishop < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Bishop'
-		@color = color
+    @display = color == :black ? '♝' : '♗'
 		super
 	end
 
@@ -253,7 +253,7 @@ class Queen < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Queen'
-		@color = color
+    @display = color == :black ? '♛' : '♕'
 		super
 	end
 
@@ -283,7 +283,7 @@ class King < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'King'
-		@color = color
+    @display = color == :black ? '♚' : '♔'
 		super
 	end
 
@@ -314,7 +314,7 @@ class Knight < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Knight'
-		@color = color
+    @display = color == :black ? '♞' : '♘'
 		super
 	end
 
