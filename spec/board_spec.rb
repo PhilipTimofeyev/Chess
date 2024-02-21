@@ -3,7 +3,7 @@ require_relative '../lib/board'
 
 describe Chessboard do
   subject(:board) {described_class.new}
-  before {board.build_board}
+  before {board.build_empty_board}
 
   describe 'building board' do
 
@@ -17,7 +17,9 @@ describe Chessboard do
     it 'contains only empty squares' do
       squares = board.squares.values
 
-      expect(squares.all? {|square| square == '_'}).to be true
+      expected_color = :empty
+
+      expect(squares.all? {|square| square.color == :empty}).to be true
     end
 
     it 'outputs column labels' do
