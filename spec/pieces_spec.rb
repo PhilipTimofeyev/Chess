@@ -1,7 +1,6 @@
 require_relative '../lib/pieces'
 require_relative '../lib/board'
 
-
 describe Misc do
 
   let(:piece_class) { Class.new { extend Misc } }
@@ -137,6 +136,10 @@ describe Pawn do
 
       expect(result).to eq(correct_moveset)
     end
+
+    xit 'converts to other piece when reaching other side' do
+
+    end
   end
     describe 'moveset black' do
       it 'can move two squares forward from starting position' do
@@ -175,44 +178,141 @@ describe Pawn do
 
         expect(result).to eq(correct_moveset)
       end
+    end
   end
 
-  describe Rook do
+describe Rook do
 
-    before do 
-      board.build_empty_board
-      board.set_board_pieces
-    end
-
-    let(:rook) { described_class.new }
-    let(:board) {Chessboard.new}
-
-    describe 'moveset' do
-      it 'only shows column and row for current square' do
-        board.move_piece(:A1, :C4)
-        rook = :C4
-        correct_moveset = [:A4, :B4, :C3, :C5, :C6, :C7, :D4, :E4, :F4, :G4, :H4]
-        result = board[rook].validated_moveset(board)
-
-        expect(result).to eq(correct_moveset)
-      end
-
-      it 'only captures opposite color' do
-        board.move_piece(:A1, :C4)
-        board.move_piece(:A2, :C3)
-        board.move_piece(:B2, :B4)
-        board.move_piece(:B7, :C5)
-        board.move_piece(:C7, :D4)
-
-        rook = :C4
-        correct_moveset = [:C5, :D4]
-        result = board[rook].validated_moveset(board)
-
-        expect(result).to eq(correct_moveset)
-      end
-    end
-
+  before do 
+    board.build_empty_board
+    board.set_board_pieces
   end
+
+  let(:rook) { described_class.new }
+  let(:board) {Chessboard.new}
+
+  describe 'moveset' do
+    it 'only returns column and row for current square' do
+      board.move_piece(:A1, :C4)
+      rook = :C4
+      correct_moveset = [:A4, :B4, :C3, :C5, :C6, :C7, :D4, :E4, :F4, :G4, :H4]
+      result = board[rook].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+    it 'only captures opposite color' do
+      board.move_piece(:A1, :C4)
+      board.move_piece(:A2, :C3)
+      board.move_piece(:B2, :B4)
+      board.move_piece(:B7, :C5)
+      board.move_piece(:C7, :D4)
+
+      rook = :C4
+      correct_moveset = [:C5, :D4]
+      result = board[rook].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+  end
+end
+
+describe Bishop do
+
+  before do 
+    board.build_empty_board
+    board.set_board_pieces
+  end
+
+  let(:rook) { described_class.new }
+  let(:board) {Chessboard.new}
+
+  describe 'moveset' do
+    it 'only returns diagonal squares for current square' do
+      board.move_piece(:B1, :B4)
+      bishop = :B4
+      correct_moveset = [:A3, :A5, :C3, :C5, :D6, :E7]
+
+      result = board[bishop].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+    it 'only captures opposite color' do
+      board.move_piece(:B1, :C4)
+      board.move_piece(:A2, :B3)
+      board.move_piece(:B2, :B5)
+      board.move_piece(:B7, :D5)
+      board.move_piece(:C7, :D3)
+
+      bishop = :C4
+      correct_moveset = [:D3, :D5]
+      result = board[bishop].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+  end
+end
+
+describe Queen do
+
+  before do 
+    board.build_empty_board
+    board.set_board_pieces
+  end
+
+  let(:queen) { described_class.new }
+  let(:board) {Chessboard.new}
+
+  describe 'moveset' do
+    it 'returns row, column, and diagonals for current square' do
+      board.move_piece(:D1, :B4)
+      queen = :B4
+      correct_moveset = 
+      [:A4, :C4, :D4, :E4, :F4, :G4, :H4, 
+      :B3, :B5, :B6, :B7, 
+      :A3, :C5, :D6, :E7, 
+      :A5, :C3]
+
+      board.to_s
+
+      result = board[queen].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+    it 'only captures opposite color' do
+      board.move_piece(:D1, :C4)
+      board.move_piece(:A2, :B3)
+      board.move_piece(:B2, :B5)
+      board.move_piece(:B7, :D5)
+      board.move_piece(:C7, :D3)
+      board.move_piece(:H2, :C3)
+      board.move_piece(:E2, :B4)
+      board.move_piece(:H7, :C5)
+      board.move_piece(:E7, :D4)
+
+      board.to_s
+
+      queen = :C4
+      correct_moveset = [:D4, :C5, :D5, :D3]
+      result = board[queen].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+  end
+end
+
+describe King do
+
+  before do 
+    board.build_empty_board
+    board.set_board_pieces
+  end
+
+  let(:queen) { described_class.new }
+  let(:board) {Chessboard.new}
 
 
 end
+
