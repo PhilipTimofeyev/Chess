@@ -232,7 +232,8 @@ class Rook
 	def validated_moveset(board)
 		column_squares = all_squares_in_column(board)
 		row_squares = all_squares_in_row(board)
-		valid_squares(column_squares, board) + valid_squares(row_squares, board)
+		valid = valid_squares(column_squares, board) + valid_squares(row_squares, board)
+		valid.sort
 	end
 
 end
@@ -359,7 +360,8 @@ class Knight
 	def full_moveset(board)
 		letter, number = convert_sym_to_string_arr(current_square)
 
-		moveset = [[letter.succ, number.succ.succ],
+		moveset = [
+							[letter.succ, number.succ.succ],
 							[letter.succ, preceding_number(preceding_number(number))],
 							[letter.succ.succ, number.succ],
 							[letter.succ.succ, preceding_number(number)],
