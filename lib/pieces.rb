@@ -335,7 +335,7 @@ class King
 
 		squares.select do |square|
 			within_bounds?(square) && board[square].color != color
-		end
+		end.sort
 	end
 
 end
