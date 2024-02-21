@@ -193,13 +193,11 @@ class Pawn < BasicPiece
 	def validated_moveset(board)
 		all_moves = color == :black ? full_moveset_black(board) : full_moveset_white(board)
 
-		within_bounds = all_moves.select { |square| within_bounds?(square) }
-		valid_moves = within_bounds.select { |square|board[square].color != color }
+		within_bounds_squares = all_moves.select { |square| within_bounds?(square) }
+		non_same_color_squares = within_bounds_squares.select { |square|board[square].color != color }
 
-		valid_moves = valid_moves.reject {|square| same_column?(square) && board[square].color != :empty}
+		valid_moves = non_same_color_squares.reject {|square| same_column?(square) && board[square].color != :empty}
 		valid_moves = valid_moves.reject {|square| !same_column?(square) && board[square].color == :empty}
-
-		valid_moves
 	end
 
 	def to_s
@@ -242,10 +240,10 @@ class Bishop < BasicPiece
 	end
 
 	def validated_moveset(board)
-		left_right =  antidiagonal_squares(board)
-		right_left = main_diagonal_squares(board)
+		antidiagonal =  antidiagonal_squares(board)
+		main_diagonal = main_diagonal_squares(board)
 
-		valid = valid_squares(left_right, board) + valid_squares(right_left, board)
+		valid = valid_squares(antidiagonal, board) + valid_squares(main_diagonal, board)
 		valid.sort
 	end
 
@@ -264,17 +262,17 @@ class Queen < BasicPiece
 	end
 
 	def validated_moveset(board)
-		left_right_diag =  antidiagonal_squares(board)
-		right_left_diag = main_diagonal_squares(board)
-		column_squares = all_squares_in_column(board)
-		row_squares = all_squares_in_row(board)
+		antidiagonal =  antidiagonal_squares(board)
+		main_diagonal = main_diagonal_squares(board)
+		column = all_squares_in_column(board)
+		row = all_squares_in_row(board)
 
-		row = valid_squares(row_squares, board)
-		column = valid_squares(column_squares, board)
-		diag_left_right = valid_squares(left_right_diag, board)
-		diag_right_left = valid_squares(right_left_diag, board)
+		row = valid_squares(row, board)
+		column = valid_squares(column, board)
+		antidiagonal = valid_squares(antidiagonal, board)
+		main_diagonal = valid_squares(main_diagonal, board)
 
-		row + column + diag_left_right + diag_right_left
+		row + column + antidiagonal + main_diagonal
 	end
 
 end
@@ -294,24 +292,20 @@ class King < BasicPiece
 	end
 
 	def full_moveset(board)
-		c_letter, c_number = convert_sym_to_string_arr(current_square)
+		cur_letter, cur_number = convert_sym_to_string_arr(current_square)
 
 		board.squares.keys.select do |square|
 			letter, number = convert_sym_to_string_arr(square)
 			
-			letter.between?(preceding_letter(c_letter), c_letter.succ) &&
-			number.between?(preceding_number(c_number), c_number.succ)
+			letter.between?(preceding_letter(cur_letter), cur_letter.succ) &&
+			number.between?(preceding_number(cur_number), cur_number.succ)
 		end
 	end
 
 	def validated_moveset(board)
 		squares = full_moveset(board)
 
-		#don't need within bounds here
-
-		squares.select do |square|
-			within_bounds?(square) && board[square].color != color
-		end.sort
+		squares.select { |square| board[square].color != color }.sort
 	end
 
 end
@@ -350,8 +344,7 @@ class Knight < BasicPiece
 
 		within_bounds_squares = squares.select {|square| within_bounds?(square) }
 
-		validated_squares = within_bounds_squares.select {|square| board[square].color != color}
-		validated_squares.sort
+		validated_squares = within_bounds_squares.select {|square| board[square].color != color}.sort
 	end
 
 end
