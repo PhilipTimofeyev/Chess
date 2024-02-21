@@ -59,6 +59,7 @@ describe Misc do
   end
 
   describe 'checks if square is within board boundary' do
+
     it 'validates square when passed an in bound array' do
       valid_square = ['B', '3']
       result = piece_class.within_bounds?(valid_square)
@@ -87,6 +88,93 @@ describe Misc do
       expect(result).to be false
     end
   end
+end
 
+describe Pawn do
+
+  before do 
+    board.build_empty_board
+    board.set_board_pieces
+  end
+
+  let(:pawn) { described_class.new }
+  let(:board) {Chessboard.new}
+
+  describe 'moveset white' do
+    it 'can move two squares forward from starting position' do
+      pawn = :D2
+      correct_moveset = [:D3, :D4]
+      result = board[pawn].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+    it 'can capture diagonally but only move forward one' do
+      board.move_piece(:E2, :E3)
+      board.move_piece(:F7, :F4)
+      pawn = :E3
+      correct_moveset = [:E4, :F4]
+      result = board[pawn].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+    it 'does not jump over pieces' do
+      board.move_piece(:E2, :D3)
+      pawn = :D2
+      correct_moveset = []
+      result = board[pawn].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+    it 'does not capture same color pieces' do
+      board.move_piece(:F7, :C3)
+      board.move_piece(:E2, :E3)
+      pawn = :D2
+      correct_moveset = [:C3, :D3, :D4]
+      result = board[pawn].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+  end
+    describe 'moveset black' do
+      it 'can move two squares forward from starting position' do
+        pawn = :D7
+        correct_moveset = [:D6, :D5]
+        result = board[pawn].validated_moveset(board)
+
+        expect(result).to eq(correct_moveset)
+      end
+
+      it 'can capture diagonally but only move forward one' do
+        board.move_piece(:E7, :E6)
+        board.move_piece(:F2, :F5)
+        pawn = :E6
+        correct_moveset = [:E5, :F5]
+        result = board[pawn].validated_moveset(board)
+
+        expect(result).to eq(correct_moveset)
+      end
+
+      it 'does not jump over pieces' do
+        board.move_piece(:E7, :D6)
+        pawn = :D7
+        correct_moveset = []
+        result = board[pawn].validated_moveset(board)
+
+        expect(result).to eq(correct_moveset)
+      end
+
+      it 'does not capture same color pieces' do
+        board.move_piece(:F2, :C6)
+        board.move_piece(:E7, :E6)
+        pawn = :D7
+        correct_moveset = [:C6, :D6, :D5]
+        result = board[pawn].validated_moveset(board)
+
+        expect(result).to eq(correct_moveset)
+      end
+  end
 
 end
