@@ -270,8 +270,6 @@ describe Queen do
       :A3, :C5, :D6, :E7, 
       :A5, :C3]
 
-      board.to_s
-
       result = board[queen].validated_moveset(board)
 
       expect(result).to eq(correct_moveset)
@@ -328,11 +326,59 @@ describe King do
       board.move_piece(:H7, :C5)
       board.move_piece(:E7, :D4)
 
-      board.to_s
-
       king = :C4
       correct_moveset = [:D4, :C5, :D5, :D3]
       result = board[king].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+  end  
+end
+
+describe Knight do
+
+  let(:board) {Chessboard.new}
+
+  before do 
+    board.build_empty_board
+    board.set_knights
+  end
+
+  describe 'moveset' do
+    it 'returns row, column, and diagonals for current square' do
+      board.move_piece(:C1, :D4)
+      knight = :D4
+      correct_moveset = [:B3, :B5, :C2, :C6, :E2, :E6, :F3, :F5]
+
+      result = board[knight].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+
+    it 'only captures opposite color' do
+      board.set_board_pieces
+
+      board.move_piece(:C1, :D4)
+      board.move_piece(:A2, :B3)
+      board.move_piece(:B2, :B5)
+      board.move_piece(:B7, :E6)
+      board.move_piece(:C7, :F3)
+
+      knight = :D4
+      correct_moveset = [:C6, :E6, :F3, :F5]
+      result = board[knight].validated_moveset(board)
+
+      expect(result).to eq(correct_moveset)
+    end
+
+    it 'can jump over pieces' do 
+      board.set_board_pieces
+      board.move_piece(:B7, :D3)
+
+      knight = :C1
+      correct_moveset = [:B3, :D3]
+      result = board[knight].validated_moveset(board)
 
       expect(result).to eq(correct_moveset)
     end
