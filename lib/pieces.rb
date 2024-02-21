@@ -137,17 +137,25 @@ class Empty
 
 end
 
-class Pawn
+class BasicPiece
 	include Misc
 
 	attr_accessor :current_square
 	attr :color, :name
 
 	def initialize(current_square, color)
-		@name = 'Pawn'
 		@color = color
-		@display = color == :black ? '♟︎' : '♙'
 		@current_square = current_square
+	end
+
+end
+
+class Pawn < BasicPiece
+
+	def initialize(current_square, color)
+		@name = 'Pawn'
+		@display = color == :black ? '♟︎' : '♙'
+		super
 	end
 
 	def full_moveset_white(board)
@@ -200,17 +208,12 @@ class Pawn
 
 end
 
-class Rook
-	include Misc
-
-	attr_accessor :current_square
-	attr :color, :name
+class Rook < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Rook'
 		@color = color
-		@display = color == :black ? '♜' : '♖'
-		@current_square = current_square
+		super
 	end
 
 	def to_s
@@ -226,17 +229,12 @@ class Rook
 
 end
 
-class Bishop
-	include Misc
-
-	attr_accessor :current_square
-	attr :color, :name
+class Bishop < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Bishop'
 		@color = color
-		@display = color == :black ? '♝' : '♗'
-		@current_square = current_square
+		super
 	end
 
 	def to_s
@@ -253,17 +251,12 @@ class Bishop
 
 end
 
-class Queen
-	include Misc
-
-	attr_accessor :current_square
-	attr :color, :name
+class Queen < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Queen'
 		@color = color
-		@display = color == :black ? '♛' : '♕'
-		@current_square = current_square
+		super
 	end
 
 	def to_s
@@ -288,17 +281,12 @@ end
 
 #King cannot place itself in check
 
-class King
-	include Misc
-
-	attr_accessor :current_square
-	attr :color, :name
+class King < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'King'
 		@color = color
-		@display = color == :black ? '♚' : '♔'
-		@current_square = current_square
+		super
 	end
 
 	def to_s
@@ -328,17 +316,12 @@ class King
 
 end
 
-class Knight
-	include Misc
-
-	attr_accessor :current_square
-	attr :color, :name
+class Knight < BasicPiece
 
 	def initialize(current_square, color)
 		@name = 'Knight'
 		@color = color
-		@display = color == :black ? '♞' : '♘'
-		@current_square = current_square
+		super
 	end
 
 	def to_s
