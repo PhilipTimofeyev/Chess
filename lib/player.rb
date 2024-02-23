@@ -54,11 +54,23 @@ class Player
 		square = nil
 		loop do
 			square = gets.chomp.upcase.to_sym
-			break if valid_squares.include?(square)
+			# if valid_squares.include?(square)
+				if board.squares[piece].is_a?(King)
+					loop do
+						if board.check?(square, board[piece])
+							puts "this places king in check"
+							sleep (1)
+						end
+						break
+					end
+				end
+				break
+			# end
 			puts "Please enter a valid square."
 		end
 
 		board.move_piece(piece, square)
 	end
+
 
 end	
