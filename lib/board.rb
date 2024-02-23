@@ -22,7 +22,7 @@ class Chessboard
   end
 
   def set_board_pieces
-    set_pawns
+    # set_pawns
     set_rooks
     set_bishops
     set_knights
@@ -116,5 +116,29 @@ class Chessboard
   def clear
     Gem.win_platform? ? (system 'cls') : (system 'clear')
   end
+
+  def check?(square, piece)
+    opponent_color = piece.color == :black ? :white : :black
+
+    opponent_pieces = squares.values.select {|square| square.color == opponent_color }
+
+    board_state = squares.dup
+
+    move_piece(piece.current_square, square)
+
+    result = opponent_pieces.any? do |piece|
+      piece.validated_moveset(self).include?(square)
+    end
+
+    self.squares = board_state
+
+    result
+  end
 end
 
+
+# x = Chessboard.new
+# x.build_empty_board
+# x.set_board_pieces
+# x.to_s
+# p x.check?(:D5, x[:E1])
