@@ -120,9 +120,11 @@ class Chessboard
   def check?(square, piece)
     opponent_color = piece.color == :black ? :white : :black
 
-    opponent_pieces = squares.values.select {|square| square.color == opponent_color }
+    orig_square = piece.current_square
 
-    board_state = squares.dup
+    board_state = squares.clone
+
+    opponent_pieces = squares.values.select {|square| square.color == opponent_color }
 
     move_piece(piece.current_square, square)
 
@@ -131,14 +133,9 @@ class Chessboard
     end
 
     self.squares = board_state
+    move_piece(orig_square, orig_square)
 
     result
   end
 end
 
-
-# x = Chessboard.new
-# x.build_empty_board
-# x.set_board_pieces
-# x.to_s
-# p x.check?(:D5, x[:E1])
