@@ -49,28 +49,25 @@ class Player
 		puts "Where would you like to move #{board.squares[piece].name} #{board.squares[piece].current_square}?"
 
 		valid_squares = board[piece].validated_moveset(board)
-		p valid_squares
 
 		square = nil
 		loop do
 			square = gets.chomp.upcase.to_sym
-			# if valid_squares.include?(square)
-				if board.squares[piece].is_a?(King)
-					loop do
-						if board.check?(square, board[piece])
-							puts "this places king in check"
-							sleep (1)
-						end
-						break
-					end
+			if valid_squares.include?(square)
+				if board[piece].is_a?(King) && board.check?(square, board[piece])
+					board.to_s
+					puts "#{square} will place the king in check. Select a different square."
+				else
+					break
 				end
-				break
-			# end
-			puts "Please enter a valid square."
+			else
+				board.to_s
+				puts "Please enter one of the valid squares:"
+				puts valid_squares.join(' ')
+			end
 		end
 
 		board.move_piece(piece, square)
 	end
-
 
 end	
