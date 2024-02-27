@@ -226,7 +226,7 @@ describe Bishop do
 
   describe 'moveset' do
     it 'only returns diagonal squares for current square' do
-      board.move_piece(:B1, :B4)
+      board.move_piece(:C1, :B4)
       bishop = :B4
       correct_moveset = [:A3, :A5, :C3, :C5, :D6, :E7]
 
@@ -236,7 +236,7 @@ describe Bishop do
     end
 
     it 'only captures opposite color' do
-      board.move_piece(:B1, :C4)
+      board.move_piece(:C1, :C4)
       board.move_piece(:A2, :B3)
       board.move_piece(:B2, :B5)
       board.move_piece(:B7, :D5)
@@ -346,7 +346,7 @@ describe Knight do
 
   describe 'moveset' do
     it 'returns row, column, and diagonals for current square' do
-      board.move_piece(:C1, :D4)
+      board.move_piece(:B1, :D4)
       knight = :D4
       correct_moveset = [:B3, :B5, :C2, :C6, :E2, :E6, :F3, :F5]
 
@@ -359,7 +359,7 @@ describe Knight do
     it 'only captures opposite color' do
       board.set_board_pieces
 
-      board.move_piece(:C1, :D4)
+      board.move_piece(:B1, :D4)
       board.move_piece(:A2, :B3)
       board.move_piece(:B2, :B5)
       board.move_piece(:B7, :E6)
@@ -374,10 +374,10 @@ describe Knight do
 
     it 'can jump over pieces' do 
       board.set_board_pieces
-      board.move_piece(:B7, :D3)
+      board.move_piece(:B7, :C3)
 
-      knight = :C1
-      correct_moveset = [:B3, :D3]
+      knight = :B1
+      correct_moveset = [:A3, :C3]
       result = board[knight].validated_moveset(board)
 
       expect(result).to eq(correct_moveset)
