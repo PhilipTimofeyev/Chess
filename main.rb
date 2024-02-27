@@ -17,8 +17,7 @@ board.to_s
 loop do
   players.first.turn(board)
   board.to_s
-  board.checkmate?
-  break if board.checkmate?
+  break if board.checkmate? || board.stalemate?
   players.reverse!
 end
 

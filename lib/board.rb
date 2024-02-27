@@ -138,7 +138,7 @@ class Chessboard
     result
   end
 
-  def king_check?(color)
+  def king_in_check?(color)
     king = squares.values.select {|chess_piece| chess_piece.is_a?(King) && chess_piece.color == color}.first
 
     check?(king.current_square, king)
@@ -155,7 +155,15 @@ class Chessboard
 
     result.empty? ? false : result.first
   end
-end
 
+  def stalemate?(color)
+    pieces = squares.values.select {|piece| piece.color == color}
+
+    no_valid = pieces.all? do |piece| 
+      piece.validated_moveset(self).all? {|move| check?(move, piece)}
+    end
+     no_valid && !king_in_check?(color)
+  end
+end
 
 
