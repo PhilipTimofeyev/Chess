@@ -123,4 +123,26 @@ describe Chessboard do
       expect(checkmate).to be false
     end
   end
+
+  describe 'stalemate?' do
+    it 'Returns true if there is a draw' do
+      board[:H8] = King.new(:H8, :black)
+      board[:H6] = King.new(:H6, :white)
+      board[:G6] = Rook.new(:G6, :white)
+
+      result = board.stalemate?(:black)
+
+      expect(result).to be true
+    end
+
+    it 'Returns true if there is a draw alternate' do
+      board[:A8] = King.new(:A8, :black)
+      board[:C4] = King.new(:C4, :white)
+      board[:C7] = Queen.new(:C7, :white)
+
+      result = board.stalemate?(:black)
+
+      expect(result).to be true
+    end
+  end
 end
