@@ -59,7 +59,7 @@ class Chessboard
     squares[:G1] = Knight.new(:G1, :white)
 
     squares[:B8] = Knight.new(:B8, :black)
-    squares[:G8] = Knight.new(:FG8, :black)
+    squares[:G8] = Knight.new(:G8, :black)
   end
 
   def set_queens
@@ -119,23 +119,29 @@ class Chessboard
 
   def check?(square, piece)
     opponent_color = piece.color == :black ? :white : :black
+    opponent_pieces = squares.values.select {|square| square.color == opponent_color }
+
+    king = squares.values.select {|chess_piece| chess_piece.is_a?(King) && chess_piece.color == piece.color}.first
 
     orig_square = piece.current_square
-
     board_state = squares.clone
-
-    opponent_pieces = squares.values.select {|square| square.color == opponent_color }
 
     move_piece(piece.current_square, square)
 
     result = opponent_pieces.any? do |piece|
-      piece.validated_moveset(self).include?(square)
+      piece.validated_moveset(self).include?(king.current_square)
     end
 
     self.squares = board_state
     move_piece(orig_square, orig_square)
 
     result
+  end
+
+  def king_check?(color)
+    king = squares.values.select {|chess_piece| chess_piece.is_a?(King) && chess_piece.color == color}.first
+
+    check?(king.current_square, king)
   end
 
   def checkmate?
@@ -147,16 +153,9 @@ class Chessboard
       moves.all? {|square| check?(square, king) }
     end
 
-    result.empty? ? false : result
+    result.empty? ? false : result.first
   end
 end
 
-# x = Chessboard.new
-# x.build_empty_board
-# x.set_board_pieces
-# x.move_piece(:G2, :G4)
-# x.move_piece(:E7, :E6)
-# x.move_piece(:F2, :F3)
-# x.move_piece(:D8, :H4)
-# p x.checkmate?
-# x.to_s
+
+
