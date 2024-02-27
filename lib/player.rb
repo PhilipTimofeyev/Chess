@@ -9,13 +9,26 @@ class Player
 	end
 
 	def turn(board)
-		piece = select_piece(board)
+		piece = nil
+		square = nil
+		loop do
+			piece = select_piece(board)
 
-		select_square(board, piece)
+			square = select_square(board, piece)
+
+			if board.king_check?(color) && board.check?(square, board[piece])
+				puts "This leaves king in check, select a different move."
+			elsif square
+				break
+			end
+		end
+
+		board.move_piece(piece, square)
+
 	end
 
 	def select_color
-		puts "Will you be playing as the white or black?"
+		puts "Will you be playing as white or black?"
 
 		response = nil
 
@@ -47,16 +60,18 @@ class Player
 
 	def select_square(board, piece)
 		puts "Where would you like to move #{board.squares[piece].name} #{board.squares[piece].current_square}?"
+		puts "Enter 1 to change pieces."
 
 		valid_squares = board[piece].validated_moveset(board)
 
 		square = nil
 		loop do
 			square = gets.chomp.upcase.to_sym
+					return false if square == :'1'
 			if valid_squares.include?(square)
-				if board[piece].is_a?(King) && board.check?(square, board[piece])
+				if board.check?(square, board[piece])
 					board.to_s
-					puts "#{square} will place the king in check. Select a different square."
+					puts "#{square} will place the king in check. Select a different square or piece."
 				else
 					break
 				end
@@ -66,8 +81,7 @@ class Player
 				puts valid_squares.join(' ')
 			end
 		end
-
-		board.move_piece(piece, square)
+		square
 	end
 
 end	
