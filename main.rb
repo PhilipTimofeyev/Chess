@@ -1,3 +1,5 @@
+#make the option to show moves and hide them
+
 require_relative './lib/board'
 require_relative './lib/player'
 
@@ -9,12 +11,16 @@ player_one.select_color
 player_two = Player.new
 player_two.color = player_one.color == :white ? :black : :white
 
+players = [player_one, player_two]
 board.to_s
 
 loop do
-  
-  player_one.turn(board)
+  players.first.turn(board)
   board.to_s
-  player_two.turn(board)
-  board.to_s
+  board.checkmate?
+  break if board.checkmate?
+  players.reverse!
 end
+
+
+puts "You won"
