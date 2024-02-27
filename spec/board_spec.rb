@@ -93,6 +93,34 @@ describe Chessboard do
 
       expect(board.checkmate?).to be board[:H8]
     end
+  end
 
+  describe 'check?' do
+    it 'Returns true if a move will place the king in check' do
+      board[:C7] = King.new(:C7, :black)
+      board[:C4] = Queen.new(:C4, :white)
+      board[:B1] = Rook.new(:B1, :white)
+      board[:C6] = Rook.new(:C6, :black)
+      board[:G1] = King.new(:G1, :white)
+
+      result = board.check?(:D6, board[:C6])
+
+      expect(result).to be true
+    end
+  end
+
+  describe 'king_in_check?' do
+    it 'Returns true if the king is in check but not checkmate' do
+      board[:C7] = King.new(:C7, :black)
+      board[:C4] = Queen.new(:C4, :white)
+      board[:B1] = Rook.new(:B1, :white)
+      board[:G1] = King.new(:G1, :white)
+
+      check = board.king_in_check?(:black)
+      checkmate = board.checkmate?
+
+      expect(check).to be true
+      expect(checkmate).to be false
+    end
   end
 end
