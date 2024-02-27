@@ -1,7 +1,7 @@
 require_relative 'pieces'
 
 class Chessboard
-  #change lower upper bound to arr (rows/numbers)
+  # change lower upper bound to arr (rows/numbers)
   EMPTY_SQUARE = '_'
   LOWER_BOUND = 0
   UPPER_BOUND = 7
@@ -118,18 +118,20 @@ class Chessboard
   end
 
   def check?(square, piece)
-    opponent_color = piece.color == :black ? :white : :black
-    opponent_pieces = squares.values.select {|square| square.color == opponent_color }
+    op_color = piece.color == :black ? :white : :black
+    opponent_pieces = squares.values.select { |op_piece| op_piece.color == op_color }
 
-    king = squares.values.select {|chess_piece| chess_piece.is_a?(King) && chess_piece.color == piece.color}.first
+    king = squares.values.select do |chess_piece|
+      chess_piece.is_a?(King) && chess_piece.color == piece.color
+    end.first
 
     orig_square = piece.current_square
     board_state = squares.clone
 
     move_piece(piece.current_square, square)
 
-    result = opponent_pieces.any? do |piece|
-      piece.validated_moveset(self).include?(king.current_square)
+    result = opponent_pieces.any? do |op_piece|
+      op_piece.validated_moveset(self).include?(king.current_square)
     end
 
     self.squares = board_state
@@ -139,31 +141,32 @@ class Chessboard
   end
 
   def king_in_check?(color)
-    king = squares.values.select {|chess_piece| chess_piece.is_a?(King) && chess_piece.color == color}.first
+    king = squares.values.select do |chess_piece|
+      chess_piece.is_a?(King) && chess_piece.color == color
+    end.first
 
     check?(king.current_square, king)
   end
 
   def checkmate?
-    kings = squares.values.select {|piece| piece.is_a?(King)}
+    kings = squares.values.select { |piece| piece.is_a?(King) }
 
     result = kings.select do |king|
       moves = king.validated_moveset(self)
       next if moves.empty?
-      moves.all? {|square| check?(square, king) }
+      moves.all? { |square| check?(square, king) }
     end
 
     result.empty? ? false : result.first
   end
 
   def stalemate?(color)
-    pieces = squares.values.select {|piece| piece.color == color}
+    pieces = squares.values.select { |piece| piece.color == color }
 
-    no_valid = pieces.all? do |piece| 
-      piece.validated_moveset(self).all? {|move| check?(move, piece)}
+    no_valid = pieces.all? do |piece|
+      piece.validated_moveset(self).all? { |move| check?(move, piece) }
     end
-     no_valid && !king_in_check?(color)
+
+    no_valid && !king_in_check?(color)
   end
 end
-
-
