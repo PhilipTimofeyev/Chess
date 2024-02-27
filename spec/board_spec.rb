@@ -50,5 +50,49 @@ describe Chessboard do
     end
   end
 
+  describe 'checkmate?' do
+    example 'Arabian mate' do
+      board[:H8] = King.new(:H8, :black)
+      board[:B7] = Rook.new(:B7, :white)
+      board[:F6] = Knight.new(:F6, :white)
+      board[:G1] = King.new(:G1, :white)
 
+      expect(board.checkmate?).to be board[:H8]
+    end
+
+    example 'Balestra mate' do
+
+      board[:E8] = King.new(:E8, :black)
+      board[:F6] = Queen.new(:B7, :white)
+      board[:C6] = Bishop.new(:C6, :white)
+      board[:G1] = King.new(:G1, :white)
+
+      expect(board.checkmate?).to be board[:E8]
+    end
+
+    example 'Corridor mate' do
+
+      board[:C7] = King.new(:C7, :black)
+      board[:C4] = Queen.new(:C4, :white)
+      board[:B1] = Rook.new(:B1, :white)
+      board[:D1] = Rook.new(:D1, :white)
+      board[:G1] = King.new(:G1, :white)
+
+      expect(board.checkmate?).to be board[:C7]
+    end
+
+    example 'Smothered mate' do
+
+      board[:H8] = King.new(:H8, :black)
+      board[:C4] = Queen.new(:C4, :white)
+      board[:H6] = Knight.new(:H6, :white)
+      board[:A8] = Rook.new(:A8, :black)
+      board[:G7] = Pawn.new(:G7, :black)
+      board[:H7] = Pawn.new(:H7, :black)
+      board[:G1] = King.new(:G1, :white)
+
+      expect(board.checkmate?).to be board[:H8]
+    end
+
+  end
 end
