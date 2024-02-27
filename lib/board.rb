@@ -22,7 +22,7 @@ class Chessboard
   end
 
   def set_board_pieces
-    # set_pawns
+    set_pawns
     set_rooks
     set_bishops
     set_knights
@@ -137,5 +137,26 @@ class Chessboard
 
     result
   end
+
+  def checkmate?
+    kings = squares.values.select {|piece| piece.is_a?(King)}
+
+    result = kings.select do |king|
+      moves = king.validated_moveset(self)
+      next if moves.empty?
+      moves.all? {|square| check?(square, king) }
+    end
+
+    result.empty? ? false : result
+  end
 end
 
+# x = Chessboard.new
+# x.build_empty_board
+# x.set_board_pieces
+# x.move_piece(:G2, :G4)
+# x.move_piece(:E7, :E6)
+# x.move_piece(:F2, :F3)
+# x.move_piece(:D8, :H4)
+# p x.checkmate?
+# x.to_s
