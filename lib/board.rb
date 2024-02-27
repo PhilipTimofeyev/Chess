@@ -47,19 +47,19 @@ class Chessboard
   end
 
   def set_bishops
-    squares[:B1] = Bishop.new(:B1, :white)
-    squares[:G1] = Bishop.new(:G1, :white)
+    squares[:C1] = Bishop.new(:C1, :white)
+    squares[:F1] = Bishop.new(:F1, :white)
 
-    squares[:B8] = Bishop.new(:B8, :black)
-    squares[:G8] = Bishop.new(:G8, :black)
+    squares[:C8] = Bishop.new(:C8, :black)
+    squares[:F8] = Bishop.new(:F8, :black)
   end
 
   def set_knights
-    squares[:C1] = Knight.new(:C1, :white)
-    squares[:F1] = Knight.new(:F1, :white)
+    squares[:B1] = Knight.new(:B1, :white)
+    squares[:G1] = Knight.new(:G1, :white)
 
-    squares[:C8] = Knight.new(:C8, :black)
-    squares[:F8] = Knight.new(:F8, :black)
+    squares[:B8] = Knight.new(:B8, :black)
+    squares[:G8] = Knight.new(:FG8, :black)
   end
 
   def set_queens
