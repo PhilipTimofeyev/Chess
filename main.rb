@@ -3,7 +3,6 @@ require 'yaml'
 require_relative './lib/board'
 require_relative './lib/player'
 
-
 class Game
   attr_accessor :players, :board
   attr_reader :player_one, :player_two
@@ -46,24 +45,24 @@ class Game
   end
 
   def from_yaml(string)
-    data = YAML.load(string, 
-      permitted_classes: [Symbol, Chessboard, Rook, Knight, Queen, King, Bishop, Pawn, Empty, Player]
-      )
+    data = YAML.safe_load(string,
+                          permitted_classes: [Symbol, Chessboard, Rook, Knight, Queen,
+                                              King, Bishop, Pawn, Empty, Player])
 
     self.board = data[:board]
     self.players = data[:players]
   end
 
   def start_menu
-    clear
+    # clear
     response = nil
     loop do
       turn_options
       response = gets.chomp.to_i
       if board.squares.empty?
         break if [1, 2, 3, 4].include?(response)
-      else
-        break if [1, 2, 3, 4, 5].include?(response)
+      elsif [1, 2, 3, 4, 5].include?(response)
+        break
       end
       clear
     end
@@ -76,16 +75,16 @@ class Game
     case response
     when 1 then new_game
     when 2 then save_game
-    when 3 
-    begin
-      load_game
-    rescue
-      puts "No previous save, please select a different option."
-      sleep 3
-      menu_selection
-    end
+    when 3
+      begin
+        load_game
+      rescue StandardError
+        puts "No previous save, please select a different option."
+        sleep 3
+        menu_selection
+      end
     when 4 then quit_game
-    when 5 then play
+    when 5 then game_loop
     end
   end
 
@@ -119,12 +118,13 @@ class Game
     menu_selection
   end
 
-  def play
+  def game_loop
     clear
     loop do
       board.to_s
       break if board.checkmate? || board.stalemate?(players.first.color)
       if players.first.turn(board) == :M
+        clear
         menu_selection
         next
       end
@@ -132,13 +132,13 @@ class Game
     end
 
     puts "You won"
-
   end
 
+  def play
+    welcome
+    game_loop
+  end
 end
 
-
-
 game = Game.new
-game.welcome
 game.play
