@@ -60,7 +60,7 @@ class Game
     loop do
       turn_options
       response = gets.chomp.to_i
-      break if [1, 2, 3, 4].include?(response)
+      break if [1, 2, 3, 4, 5].include?(response)
       clear
     end
     response
@@ -72,8 +72,16 @@ class Game
     case response
     when 1 then new_game
     when 2 then save_game
-    when 3 then load_game
+    when 3 
+    begin
+      load_game
+    rescue
+      puts "No previous save, please select a different option."
+      sleep 3
+      menu_selection
+    end
     when 4 then quit_game
+    when 5 then play
     end
   end
 
@@ -97,13 +105,18 @@ class Game
         2: Save Game
         3. Load Game
         4. Quit Game
+        5. Continue
     TURN
+  end
+
+  def welcome
+    clear
+    puts "Welcome to Chess!"
+    menu_selection
   end
 
   def play
     clear
-    puts "Welcome to Chess!"
-    menu_selection
     loop do
       board.to_s
       break if board.checkmate? || board.stalemate?(players.first.color)
@@ -123,4 +136,5 @@ end
 
 
 game = Game.new
+game.welcome
 game.play
