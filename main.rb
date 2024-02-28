@@ -9,8 +9,8 @@ class Game
 
   def initialize
     @board = Chessboard.new
-    @player_one = Player.new
-    @player_two = Player.new
+    @player_one = Player.new('Player 1', :white)
+    @player_two = Player.new('Player 2', :black)
     @players = [@player_one, @player_two]
   end
 
@@ -97,8 +97,6 @@ class Game
     board.build_empty_board
     board.set_board_pieces
     board.to_s
-    player_one.select_color
-    player_two.color = player_one.color == :white ? :black : :white
   end
 
   def turn_options
