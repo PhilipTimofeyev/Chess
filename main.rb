@@ -54,7 +54,6 @@ class Game
   end
 
   def start_menu
-    # clear
     response = nil
     loop do
       turn_options
@@ -80,7 +79,8 @@ class Game
         load_game
       rescue StandardError
         puts "No previous save, please select a different option."
-        sleep 3
+        sleep 2
+        clear
         menu_selection
       end
     when 4 then quit_game
@@ -101,7 +101,7 @@ class Game
 
   def turn_options
     puts <<~TURN
-      Select from the following options:
+      \nSelect from the following options:
         1: New Game
         2: Save Game
         3. Load Game
@@ -129,12 +129,33 @@ class Game
       players.reverse!
     end
 
-    puts "You won"
+    end_conditions
   end
+
+  def end_conditions
+    if board.checkmate?
+      puts "#{board.checkmate?.color.capitalize} is checkmated. "
+    elsif board.stalemate?(players.first.color)
+      puts "It's a draw!"
+    end
+  end
+
+def play_again?
+  puts "Play again?"
+
+  response = nil
+  loop do
+    response = gets.chomp.downcase
+    break if ['y', 'n'].include?(response)
+    puts "Please enter (y) or (n)"
+  end
+  response == 'y' ? play : quit_game
+end
 
   def play
     welcome
     game_loop
+    play_again?
   end
 end
 
