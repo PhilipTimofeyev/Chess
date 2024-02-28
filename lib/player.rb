@@ -6,6 +6,13 @@ class Player
     @color = color
   end
 
+  def announce_capture(piece, square, board)
+    if board[square].color != :empty
+    	puts "#{board[piece].name} #{piece} captures #{board[square].name} #{square}"
+    	sleep 3
+    end
+  end
+
   def turn(board)
     piece = nil
     square = nil
@@ -25,6 +32,7 @@ class Player
 
     return piece if piece == :M
 
+    announce_capture(piece, square, board)
     board.move_piece(piece, square)
   end
 
