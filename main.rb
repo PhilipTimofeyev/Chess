@@ -60,7 +60,11 @@ class Game
     loop do
       turn_options
       response = gets.chomp.to_i
-      break if [1, 2, 3, 4, 5].include?(response)
+      if board.squares.empty?
+        break if [1, 2, 3, 4].include?(response)
+      else
+        break if [1, 2, 3, 4, 5].include?(response)
+      end
       clear
     end
     response
@@ -105,8 +109,8 @@ class Game
         2: Save Game
         3. Load Game
         4. Quit Game
-        5. Continue
     TURN
+    puts "  5. Continue" unless board.squares.empty?
   end
 
   def welcome
