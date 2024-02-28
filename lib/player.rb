@@ -1,9 +1,9 @@
 class Player
-  attr_accessor :color
-  attr_reader :name
+  attr_reader :player_name, :color
 
-  def initalize
-    @name = "Arthur"
+  def initialize(player_name, color)
+    @player_name = player_name
+    @color = color
   end
 
   def turn(board)
@@ -12,6 +12,7 @@ class Player
 
     loop do
       piece = select_piece(board)
+      break if piece == :M
       square = select_square(board, piece)
 
       if board.king_in_check?(color) && board.check?(square, board[piece])
@@ -22,30 +23,19 @@ class Player
       end
     end
 
+    return piece if piece == :M
+
     board.move_piece(piece, square)
-  end
-
-  def select_color
-    puts "Will you be playing as white or black?"
-
-    response = nil
-
-    loop do
-      response = gets.chomp.downcase
-      break if ["black", "white"].include?(response)
-      puts "Not a valid color. Please enter 'white' or 'black'."
-    end
-
-    @color = response.to_sym
   end
 
   def select_piece(board)
     square = nil
-    puts "Enter a chess piece to move:"
+    puts "#{player_name} enter a #{color} chess piece to move:"
 
     loop do
       square = gets.chomp.upcase.to_sym
 
+      break if square == :M
       break if board.squares.keys.include?(square) && board[square].color == color
       puts "Please enter one of your pieces:"
     end
