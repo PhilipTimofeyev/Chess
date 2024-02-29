@@ -24,9 +24,9 @@ class Chessboard
   def set_board_pieces
     set_pawns
     set_rooks
-    set_bishops
-    set_knights
-    set_queens
+    # set_bishops
+    # set_knights
+    # set_queens
     set_kings
   end
 
@@ -130,6 +130,30 @@ class Chessboard
     end.first
   end
 
+  def queen_side_castling(current_sq, new_sq)
+    switch_squares(current_sq, new_sq) if self[current_sq].is_a?(King) && [:E1, :E8].include?(current_sq) && [:A1, :A8].include?(new_sq) && self[current_sq].queen_side_castle?(self)
+  end
+
+  def king_side_castling(current_sq, new_sq)
+    switch_squares(current_sq, new_sq) if self[current_sq].is_a?(King) && [:E1, :E8].include?(current_sq) && [:H1, :H8].include?(new_sq) && self[current_sq].king_side_castle?(self)
+  end
+
+  def switch_squares(current_sq, new_sq)
+    piece_one = self[current_sq]
+    piece_two = self[new_sq]
+
+    self[new_sq] = piece_one
+    self[current_sq] = piece_two
+
+    self[new_sq].update_position(new_sq)
+    self[current_sq].update_position(current_sq)
+
+    self[new_sq].increase_move_count
+    self[current_sq].increase_move_count
+
+    true
+  end
+
   def check?(square, piece)
     king = find_king(piece.color)
 
@@ -177,3 +201,16 @@ class Chessboard
     no_valid && !king_in_check?(color)
   end
 end
+
+# x = Chessboard.new
+# x.build_empty_board
+# x.set_board_pieces
+# x.to_s
+# # x.move_piece(:E1, :C1)
+# # x.move_piece(:C1, :E1)
+# p x[:E8].queen_side_castle?(x)
+# p x[:E8].king_side_castle?(x)
+
+# x.queen_side_castling(:E1, :A1)
+# x.king_side_castling(:E8, :H8)
+# x.to_s
