@@ -25,6 +25,10 @@ module Misc
     self.current_square = new_square
   end
 
+  def all_empty?(arr, board)
+    arr.all? { |square| board[square].color == :empty }
+  end
+
   def same_column?(square)
     current_column, = convert_sym_to_string_arr(current_square)
     new_square_column, = convert_sym_to_string_arr(square)
@@ -148,11 +152,11 @@ class BasicPiece
   end
 
   def increase_move_count
-  	self.moves += 1
+    self.moves += 1
   end
 
   def decrease_move_count
-  	self.moves -= 1
+    self.moves -= 1
   end
 end
 
@@ -194,15 +198,16 @@ class Pawn < BasicPiece
     center_forward_two = number == "7" ? [letter, (number.to_i - 2).to_s] : nil
     diagonal_right = [letter.succ, preceding_number(number)]
 
-    center_forward_two = board[convert_arr_to_sym(center_forward_one)].color == :empty ? center_forward_two : nil
+    center_forward_two =
+      if board[convert_arr_to_sym(center_forward_one)].color == :empty
+        center_forward_two
+      end
 
     all_moves = [diagonal_left, center_forward_one, center_forward_two,
                  diagonal_right].compact
 
     all_moves.map { |square| convert_arr_to_sym(square) }
   end
-
-  # need to add conversion to queen if reaches other side
 
   def validated_moveset(board)
     all_moves = color == :black ? full_moveset_black(board) : full_moveset_white(board)
@@ -214,6 +219,7 @@ class Pawn < BasicPiece
     valid_moves = non_same_color_squares.reject do |square|
       same_column?(square) && board[square].color != :empty
     end
+
     valid_moves.reject do |square|
       !same_column?(square) && board[square].color == :empty
     end
@@ -302,6 +308,38 @@ class King < BasicPiece
     @display
   end
 
+  def queen_side_castle?(board)
+    rook = color == :white ? board[:A1] : board[:A8]
+
+    return false if rook.color == :empty || rook.moves > 0
+
+    between_squares = color == :white ? [:B1, :C1, :D1] : [:B8, :C8, :D8]
+
+    return false unless castling_conditions(between_squares, rook, board)
+
+    rook.current_square
+  end
+
+  def king_side_castle?(board)
+    rook = color == :white ? board[:H1] : board[:H8]
+
+    return false if rook.color == :empty || rook.moves > 0
+
+    between_squares = color == :white ? [:F1, :G1] : [:F8, :G8]
+
+    return false unless castling_conditions(between_squares, rook, board)
+
+    rook.current_square
+  end
+
+  def castling_conditions(between_squares, rook, board)
+    all_empty?(between_squares, board) &&
+      (moves == 0 && rook.moves == 0) &&
+      !board.king_in_check?(color) &&
+      between_squares.none? { |square| board.check?(square, self) } &&
+      !board.check?(rook.current_square, self)
+  end
+
   def full_moveset(board)
     cur_letter, cur_number = convert_sym_to_string_arr(current_square)
 
@@ -316,7 +354,10 @@ class King < BasicPiece
   def validated_moveset(board)
     squares = full_moveset(board)
 
-    squares.select { |square| board[square].color != color }.sort
+    moveset = squares.select { |square| board[square].color != color }
+    moveset << king_side_castle?(board) if king_side_castle?(board)
+    moveset << queen_side_castle?(board) if queen_side_castle?(board)
+    moveset.sort
   end
 end
 
