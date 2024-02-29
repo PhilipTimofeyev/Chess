@@ -333,6 +333,152 @@ describe King do
       expect(result).to eq(correct_moveset)
     end
   end  
+
+  describe '#queen_side_castle' do
+
+    it 'returns false if in between squares are not empty' do
+      king = board[:E1]
+      result = king.queen_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if king as moved' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+
+      king = board[:E1]
+      board.move_piece(:E1, :C1)
+      board.move_piece(:C1, :E1)
+      result = king.queen_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if castle places king in check' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+
+      king = board[:E1]
+      result = king.queen_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if in between square places king in check' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+      board[:C7] = Queen.new(:C7, :white)
+
+      king = board[:E8]
+      result = king.queen_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if king is in check' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+      board[:E7] = Queen.new(:E7, :white)
+
+      king = board[:E8]
+      result = king.queen_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns rook position if all rules are followed' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+      
+      king = board[:E8]
+      result = king.queen_side_castle?(board)
+
+      expect(result).to be :A8
+    end
+  end
+
+  describe '#king_side_castle' do
+
+    it 'returns false if in between squares are not empty' do
+      king = board[:E1]
+      result = king.king_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if king as moved' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+
+      king = board[:E1]
+      board.move_piece(:E1, :C1)
+      board.move_piece(:C1, :E1)
+      result = king.king_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if castle places king in check' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+
+      king = board[:E1]
+      result = king.king_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if in between square places king in check' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+      board[:F7] = Queen.new(:F7, :white)
+
+      king = board[:E8]
+      result = king.king_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns false if king is in check' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+      board[:E7] = Queen.new(:E7, :white)
+
+      king = board[:E8]
+      result = king.king_side_castle?(board)
+
+      expect(result).to be false
+    end
+
+    it 'returns rook position if all rules are followed' do
+      board.build_empty_board
+      board.set_kings
+      board.set_rooks
+      board.set_pawns
+      
+      king = board[:E8]
+      result = king.king_side_castle?(board)
+
+      expect(result).to be :H8
+    end
+  end
 end
 
 describe Knight do
