@@ -82,6 +82,7 @@ class Chessboard
       row_count -= 1
     end
     display_column_labels
+    puts ""
   end
 
   def to_s
@@ -117,20 +118,26 @@ class Chessboard
     Gem.win_platform? ? (system 'cls') : (system 'clear')
   end
 
-  def check?(square, piece)
+  def opponent_pieces(piece)
     op_color = piece.color == :black ? :white : :black
-    opponent_pieces = squares.values.select { |op_piece| op_piece.color == op_color }
+    squares.values.select { |op_piece| op_piece.color == op_color }
+  end
 
-    king = squares.values.select do |chess_piece|
-      chess_piece.is_a?(King) && chess_piece.color == piece.color
+  def find_king(color)
+    squares.values.select do |chess_piece|
+      chess_piece.is_a?(King) && chess_piece.color == color
     end.first
+  end
+
+  def check?(square, piece)
+    king = find_king(piece.color)
 
     orig_square = piece.current_square
     board_state = squares.clone
 
     move_piece(piece.current_square, square)
 
-    result = opponent_pieces.any? do |op_piece|
+    result = opponent_pieces(piece).any? do |op_piece|
       op_piece.validated_moveset(self).include?(king.current_square)
     end
 
@@ -141,9 +148,7 @@ class Chessboard
   end
 
   def king_in_check?(color)
-    king = squares.values.select do |chess_piece|
-      chess_piece.is_a?(King) && chess_piece.color == color
-    end.first
+    king = find_king(color)
 
     check?(king.current_square, king)
   end
