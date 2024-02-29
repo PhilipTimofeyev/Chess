@@ -112,6 +112,7 @@ class Chessboard
     squares[current_sq] = Empty.new
     squares[new_sq] = piece
     squares[new_sq].update_position(new_sq)
+    squares[new_sq].increase_move_count
   end
 
   def clear
@@ -143,6 +144,7 @@ class Chessboard
 
     self.squares = board_state
     move_piece(orig_square, orig_square)
+    2.times { piece.decrease_move_count }
 
     result
   end
