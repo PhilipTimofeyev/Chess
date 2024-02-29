@@ -138,12 +138,21 @@ end
 class BasicPiece
   include Misc
 
-  attr_accessor :current_square
+  attr_accessor :current_square, :moves
   attr_reader :color, :name
 
   def initialize(current_square, color)
     @color = color
     @current_square = current_square
+    @moves = 0
+  end
+
+  def increase_move_count
+  	self.moves += 1
+  end
+
+  def decrease_move_count
+  	self.moves -= 1
   end
 end
 
