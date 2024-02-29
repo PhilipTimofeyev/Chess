@@ -31,7 +31,7 @@ class Player
     end
 
     return piece if piece == :M
-
+    return if board.queen_side_castling(piece, square) || board.king_side_castling(piece, square)
     announce_capture(piece, square, board)
     board.move_piece(piece, square)
   end
