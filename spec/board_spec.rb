@@ -145,4 +145,46 @@ describe Chessboard do
       expect(result).to be true
     end
   end
+
+  describe '#switch_squares' do
+
+    before do 
+      board.build_empty_board
+      board.set_board_pieces
+    end
+
+    it 'switches position of two pieces' do
+      king = :E1
+      queen = :D1
+
+      board.switch_squares(king, queen)
+
+      expect(board[:E1].is_a?(Queen)).to be true
+      expect(board[:D1].is_a?(King)).to be true
+    end
+
+    it 'updates position of piece' do
+      king = :E1
+      queen = :D1
+
+      board.switch_squares(king, queen)
+
+      queen_square = board[:E1].current_square
+
+      expect(queen_square).to be :E1
+    end
+
+    it 'updates count of piece' do
+      king = :E1
+      queen = :D1
+
+      queen_count_before = board[queen].moves
+
+      board.switch_squares(king, queen)
+
+      queen_count_after = board[:E1].moves
+
+      expect(queen_count_before + 1).to be queen_count_after
+    end
+  end
 end
