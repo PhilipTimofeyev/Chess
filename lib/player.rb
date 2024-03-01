@@ -46,7 +46,8 @@ class Player
 
   def select_piece(board)
     square = nil
-    puts "#{player_name} enter a #{color} chess piece to move:"
+    puts "#{player_name}, enter a #{color} chess piece to move"
+    puts "or enter 'm' to return to the menu."
 
     loop do
       square = gets.chomp.upcase.to_sym
