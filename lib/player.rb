@@ -8,12 +8,23 @@ class Player
 
   def announce_capture(piece, square, board)
     if board[square].color != :empty
-    	puts "#{board[piece].name} #{piece} captures #{board[square].name} #{square}"
-    	sleep 3
+      puts "#{board[piece].name} #{piece} captures #{board[square].name} #{square}"
+      sleep 3
     end
   end
 
   def turn(board)
+    piece, square = turn_loop(board)
+
+    return piece if piece == :M
+    return if board.queen_side_castling(piece, square) ||
+              board.king_side_castling(piece, square)
+
+    announce_capture(piece, square, board)
+    board.move_piece(piece, square)
+  end
+
+  def turn_loop(board)
     piece = nil
     square = nil
 
@@ -30,10 +41,7 @@ class Player
       end
     end
 
-    return piece if piece == :M
-    return if board.queen_side_castling(piece, square) || board.king_side_castling(piece, square)
-    announce_capture(piece, square, board)
-    board.move_piece(piece, square)
+    [piece, square]
   end
 
   def select_piece(board)
@@ -52,11 +60,17 @@ class Player
   end
 
   def select_square(board, piece)
-    puts "Where would you like to move #{board[piece].name} #{board[piece].current_square}?"
-    puts "Enter 1 to change pieces."
+    puts <<~PLACE
+    Where would you like to move #{board[piece].name} #{board[piece].current_square}?
+    "Enter 1 to change pieces."
+            PLACE
 
     valid_squares = board[piece].validated_moveset(board)
 
+    select_square_loop(board, piece, valid_squares)
+  end
+
+  def select_square_loop(board, piece, valid_squares)
     square = nil
     loop do
       square = gets.chomp.upcase.to_sym
@@ -69,6 +83,7 @@ class Player
         puts valid_squares.empty? ? "No valid squares." : valid_squares.join(', ')
       end
     end
+
     square
   end
 end
