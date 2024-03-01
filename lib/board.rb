@@ -123,6 +123,21 @@ class Chessboard
     squares.values.select { |op_piece| op_piece.color == op_color }
   end
 
+  def promote_pawn
+    pawn = pawn_promotion?
+
+    color = pawn.color
+    square = pawn.current_square
+
+    squares[square] = Queen.new(square, color)
+  end
+
+  def pawn_promotion?
+    squares.values.select do |square|
+      square.is_a?(Pawn) && square.current_square.match?(/1|8/)
+    end.first
+  end
+
   def find_king(color)
     squares.values.select do |chess_piece|
       chess_piece.is_a?(King) && chess_piece.color == color
@@ -204,3 +219,4 @@ class Chessboard
     no_valid && !king_in_check?(color)
   end
 end
+
