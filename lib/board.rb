@@ -1,7 +1,6 @@
 require_relative 'pieces'
 
 class Chessboard
-  # change lower upper bound to arr (rows/numbers)
   EMPTY_SQUARE = '_'
   LOWER_BOUND = 0
   UPPER_BOUND = 7
@@ -131,11 +130,17 @@ class Chessboard
   end
 
   def queen_side_castling(current_sq, new_sq)
-    switch_squares(current_sq, new_sq) if self[current_sq].is_a?(King) && [:E1, :E8].include?(current_sq) && [:A1, :A8].include?(new_sq) && self[current_sq].queen_side_castle?(self)
+    switch_squares(current_sq, new_sq) if self[current_sq].is_a?(King) &&
+                                          [:E1, :E8].include?(current_sq) &&
+                                          [:A1, :A8].include?(new_sq) &&
+                                          self[current_sq].queen_side_castle?(self)
   end
 
   def king_side_castling(current_sq, new_sq)
-    switch_squares(current_sq, new_sq) if self[current_sq].is_a?(King) && [:E1, :E8].include?(current_sq) && [:H1, :H8].include?(new_sq) && self[current_sq].king_side_castle?(self)
+    switch_squares(current_sq, new_sq) if self[current_sq].is_a?(King) &&
+                                          [:E1, :E8].include?(current_sq) &&
+                                          [:H1, :H8].include?(new_sq) &&
+                                          self[current_sq].king_side_castle?(self)
   end
 
   def switch_squares(current_sq, new_sq)
@@ -150,8 +155,6 @@ class Chessboard
 
     self[new_sq].increase_move_count
     self[current_sq].increase_move_count
-
-    true
   end
 
   def check?(square, piece)
@@ -201,12 +204,3 @@ class Chessboard
     no_valid && !king_in_check?(color)
   end
 end
-
-x = Chessboard.new
-x.build_empty_board
-x.set_board_pieces
-x.move_piece(:D2, :A3)
-x.move_piece(:D8, :D4)
-p x.checkmate?
-x.to_s
-
