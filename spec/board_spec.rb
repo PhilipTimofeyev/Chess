@@ -53,7 +53,7 @@ describe Chessboard do
   describe 'checkmate?' do
     example 'Arabian mate' do
       board[:H8] = King.new(:H8, :black)
-      board[:B7] = Rook.new(:B7, :white)
+      board[:H7] = Rook.new(:H7, :white)
       board[:F6] = Knight.new(:F6, :white)
       board[:G1] = King.new(:G1, :white)
 
@@ -85,11 +85,13 @@ describe Chessboard do
 
       board[:H8] = King.new(:H8, :black)
       board[:C4] = Queen.new(:C4, :white)
-      board[:H6] = Knight.new(:H6, :white)
-      board[:A8] = Rook.new(:A8, :black)
+      board[:F7] = Knight.new(:F7, :white)
+      board[:G8] = Rook.new(:G8, :black)
       board[:G7] = Pawn.new(:G7, :black)
       board[:H7] = Pawn.new(:H7, :black)
       board[:G1] = King.new(:G1, :white)
+
+      board.to_s
 
       expect(board.checkmate?).to be board[:H8]
     end
