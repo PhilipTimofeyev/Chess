@@ -91,8 +91,6 @@ describe Chessboard do
       board[:H7] = Pawn.new(:H7, :black)
       board[:G1] = King.new(:G1, :white)
 
-      board.to_s
-
       expect(board.checkmate?).to be board[:H8]
     end
   end
