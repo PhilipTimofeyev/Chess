@@ -11,7 +11,7 @@ class Game
     @board = Chessboard.new
     @player_one = Player.new('Player 1', :white)
     @player_two = Player.new('Player 2', :black)
-    @players = [@player_one, @player_two]
+    @players = [@player_one]
   end
 
   def load_game
@@ -127,6 +127,11 @@ class Game
         menu_selection
         next
       end
+      if board.pawn_promotion?
+        board.promote_pawn
+        puts "Pawn promoted to queen!"
+        sleep(2)
+      end
       players.rotate!
     end
 
@@ -134,15 +139,17 @@ class Game
   end
 
   def end_conditions
+    winner = board.checkmate?.color == :black ? 'Player 1' : 'Player 2'
     if board.checkmate?
       puts "#{board.checkmate?.color.capitalize} is checkmated."
+      puts "#{winner} wins!"
     elsif board.stalemate?(players.first.color)
       puts "It's a draw!"
     end
   end
 
   def play_again?
-    puts "Play again?"
+    puts "\nPlay again? (y/n)"
 
     response = nil
     loop do
