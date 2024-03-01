@@ -310,11 +310,9 @@ class King < BasicPiece
 
   def queen_side_castle?(board)
     rook = color == :white ? board[:A1] : board[:A8]
-
-    return false if rook.color == :empty || rook.moves > 0
-
     between_squares = color == :white ? [:B1, :C1, :D1] : [:B8, :C8, :D8]
 
+    return false if rook.color == :empty || rook.moves > 0
     return false unless castling_conditions(between_squares, rook, board)
 
     rook.current_square
@@ -322,11 +320,9 @@ class King < BasicPiece
 
   def king_side_castle?(board)
     rook = color == :white ? board[:H1] : board[:H8]
-
-    return false if rook.color == :empty || rook.moves > 0
-
     between_squares = color == :white ? [:F1, :G1] : [:F8, :G8]
 
+    return false if rook.color == :empty || rook.moves > 0
     return false unless castling_conditions(between_squares, rook, board)
 
     rook.current_square
