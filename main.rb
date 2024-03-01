@@ -101,7 +101,7 @@ class Game
 
   def turn_options
     puts <<~TURN
-      \nSelect from the following options:
+      Select from the following options:
         1: New Game
         2: Save Game
         3. Load Game
@@ -113,6 +113,7 @@ class Game
   def welcome
     clear
     puts "Welcome to Chess!"
+    puts ""
     menu_selection
   end
 
@@ -126,7 +127,7 @@ class Game
         menu_selection
         next
       end
-      players.reverse!
+      players.rotate!
     end
 
     end_conditions
@@ -134,23 +135,23 @@ class Game
 
   def end_conditions
     if board.checkmate?
-      puts "#{board.checkmate?.color.capitalize} is checkmated. "
+      puts "#{board.checkmate?.color.capitalize} is checkmated."
     elsif board.stalemate?(players.first.color)
       puts "It's a draw!"
     end
   end
 
-def play_again?
-  puts "Play again?"
+  def play_again?
+    puts "Play again?"
 
-  response = nil
-  loop do
-    response = gets.chomp.downcase
-    break if ['y', 'n'].include?(response)
-    puts "Please enter (y) or (n)"
+    response = nil
+    loop do
+      response = gets.chomp.downcase
+      break if ['y', 'n'].include?(response)
+      puts "Please enter (y) or (n)"
+    end
+    response == 'y' ? play : quit_game
   end
-  response == 'y' ? play : quit_game
-end
 
   def play
     welcome
