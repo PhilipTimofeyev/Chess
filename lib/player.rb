@@ -24,6 +24,8 @@ class Player
     board.move_piece(piece, square)
   end
 
+  private
+
   def turn_loop(board)
     piece = nil
     square = nil
@@ -47,13 +49,13 @@ class Player
   def select_piece(board)
     square = nil
     puts "#{player_name}, enter a #{color} chess piece to move"
-    puts "or enter 'm' to return to the menu."
+    puts "or enter 'm' to return to the menu:"
 
     loop do
       square = gets.chomp.upcase.to_sym
 
-      break if square == :M
-      break if board.squares.keys.include?(square) && board[square].color == color
+      break if board.squares.keys.include?(square) && board[square].color == color ||
+      square == :M
       puts "Please enter one of your pieces:"
     end
 
@@ -63,7 +65,7 @@ class Player
   def select_square(board, piece)
     puts <<~PLACE
     Where would you like to move #{board[piece].name} #{board[piece].current_square}?
-    "Enter 1 to change pieces."
+    Enter 1 to change pieces.
             PLACE
 
     valid_squares = board[piece].validated_moveset(board)
