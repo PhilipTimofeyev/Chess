@@ -136,8 +136,22 @@ describe Pawn do
       expect(result).to eq(correct_moveset)
     end
 
-    xit 'converts to other piece when reaching other side' do
+    it 'converts to other piece when reaching other side white' do
+      board.move_piece(:A2, :A8)
+      board.promote_pawn
 
+      promoted_pawn = board[:A8]
+
+      expect(promoted_pawn.is_a?(Queen)).to be true
+    end
+
+    it 'converts to other piece when reaching other side black' do
+      board.move_piece(:A7, :A1)
+      board.promote_pawn
+
+      promoted_pawn = board[:A1]
+
+      expect(promoted_pawn.is_a?(Queen)).to be true
     end
   end
     describe 'moveset black' do
