@@ -295,8 +295,6 @@ class Queen < BasicPiece
   end
 end
 
-# King cannot place itself in check
-
 class King < BasicPiece
   def initialize(current_square, color)
     @name = 'King'
